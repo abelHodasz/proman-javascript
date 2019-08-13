@@ -17,16 +17,41 @@ export let dom = {
 
         return elementToExtend.lastChild;
     },
-    init: function () {
-        // This function should run once, when the page is loaded.
+    createBoardBtn: function () {
         let button = document.createElement('button');
         button.textContent = "Create board";
-        button.onclick = function(){
+        button.onclick = function () {
 
-            $('#create-board-modal').modal('show');
-            //add new board
+
+
+            dom.showModal('test');
         };
         document.querySelector('body').appendChild(button);
+    },
+    showModal: function (title) {
+        let modal = `
+            <div id="modal-header" class="modal-header">
+                <h5 class="modal-title">${title}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <input type="text" name="user-input" required>
+            </div>
+            <div id="modal-footer" class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Create</button>
+            </div>
+            `;
+
+        document.getElementById('modal-content').innerHTML = modal;
+
+        $('#modal').modal('show');
+    },
+    init: function () {
+        // This function should run once, when the page is loaded.
+        this.createBoardBtn();
 
     },
     loadBoards: function () {

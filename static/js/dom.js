@@ -37,7 +37,7 @@ export let dom = {
 
     createBoard: function (input) {
         dataHandler.createNewBoard(input, function (response) {
-            console.log(response)
+        dom.loadBoards()
         })
     },
 
@@ -94,7 +94,7 @@ export let dom = {
         }
 
         const outerHtml = `
-            <div class="board-container">
+            <div id="boards" class="board-container">
                 ${boardList}
             </div>
         `;

@@ -24,10 +24,21 @@ export let dom = {
 
 
 
-            dom.showModal('test');
+            dom.showModal('Create board');
+            document.getElementById('form').addEventListener("submit", function (event) {
+                dom.createBoard(document.getElementById('user-input').value);
+                event.preventDefault();
+                document.getElementById('modal-content').innerHTML = '';
+                $('#modal').modal('hide');
+            });
         };
         document.querySelector('body').appendChild(button);
     },
+
+    createBoard: function (input) {
+        dataHandler.createNewBoard(input, dom.addBoard)
+    },
+
     showModal: function (title) {
         let modal = `
             <div id="modal-header" class="modal-header">
@@ -36,13 +47,15 @@ export let dom = {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="modal-body" class="modal-body">
-                <input type="text" name="user-input" required>
-            </div>
-            <div id="modal-footer" class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Create</button>
-            </div>
+            <form id="form">
+                <div id="modal-body" class="modal-body">
+                    <input type="text" id="user-input" required>
+                </div>
+                <div id="modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="create-btn" type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </form>
             `;
 
         document.getElementById('modal-content').innerHTML = modal;

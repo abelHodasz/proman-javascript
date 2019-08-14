@@ -36,7 +36,9 @@ export let dom = {
     },
 
     createBoard: function (input) {
-        dataHandler.createNewBoard(input, dom.addBoard)
+        dataHandler.createNewBoard(input, function (response) {
+            console.log(response)
+        })
     },
 
     showModal: function (title) {

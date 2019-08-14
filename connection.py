@@ -1,5 +1,7 @@
 import csv
 import psycopg2
+import psycopg2.extras
+import os
 
 STATUSES_FILE = './data/statuses.csv'
 BOARDS_FILE = './data/boards.csv'

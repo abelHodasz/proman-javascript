@@ -10,24 +10,18 @@ def get_card_status(status_id):
     statuses = connection.get_statuses()
     return next((status['title'] for status in statuses if status['id'] == str(status_id)), 'Unknown')
 
-
-@connection.connection_handler
-def get_boards(cursor):
-    cursor.execute("""
-                    SELECT title FROM boards;
-                    """)
-
-    data = cursor.fetchall()
-    return data
+def get_statuses():
+    return connection.execute_select('SELECT title FROM statuses;')
 
 
-@connection.connection_handler
-def create_board(cursor, title):
-    cursor.execute("""
-                    INSERT INTO boards (title) 
-                    VALUES (%(title)s);
-                    """,
-                   {'title': title})
+def get_boards():
+   return connection.execute_select('SELECT * FROM boards;')
+
+
+
+def create_board(title):
+    return connection.execute_dml_statement('INSERT INTO boards (title) VALUES (%(title)s);', variables={'title': title})
+
 
 
 def get_cards_for_board(board_id):

@@ -64,8 +64,19 @@ export let dom = {
 
         $('#modal').modal('show');
     },
+
+    clickHandler: function (event) {
+        if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
+            let id = event.target.id.split('-')[2];
+            let element = document.getElementById('columns-'+id);
+            dom.toggleBoards(element);
+        }
+    },
+
     init: function () {
-        // This function should run once, when the page is loaded.
+        document.addEventListener('click', function (event) {
+         dom.clickHandler(event);
+        });
         this.createBoardBtn();
 
     },
@@ -80,27 +91,56 @@ export let dom = {
         // it adds necessary event listeners also
         document.getElementById('boards').remove();
         let boardList = '';
+        dataHandler.getStatuses((statuses) => {
 
-        for(let board of boards){
-            boardList += `
-            <section class="board">
-            <div class="board-header">
-                <span class="board-title">${board.title}</span>
-                <button class="board-add">Add Card</button>
-                <button class="board-toggle"><i class="fas fa-chevron-down"></i></button>
-            </div>
-            </section>
+            for(let board of boards){
+                let columnList = '';
+                for (let status of statuses) {
+                    columnList += `
+                    <div class="board-column">
+                        <div class="board-column-title">${status.title}</div>
+                        <div class="board-column-content">
+                            <div class="card">
+                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                                <div class="card-title">Card 1</div>
+                            </div>
+                            <div class="card">
+                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                                <div class="card-title">Card 2</div>
+                            </div>
+                        </div>
+                    </div>`
+                }
+
+                boardList += `
+                <section id="board-${board.id}" class="board">
+                <div class="board-header">
+                    <span class="board-title">${board.title}</span>
+                    <button class="board-add">Add Card</button>
+                    <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
+                </div>
+                <div id="columns-${board.id}" class="board-columns">
+                    ${columnList}  
+                </div>
+                </section>
+                `;
+            }
+
+            const outerHtml = `
+                <div id="boards" class="board-container">
+                    ${boardList}
+                </div>
             `;
-        }
 
-        const outerHtml = `
-            <div id="boards" class="board-container">
-                ${boardList}
-            </div>
-        `;
+            this._appendToElement(document.querySelector('body'), outerHtml);
 
-        this._appendToElement(document.querySelector('body'), outerHtml);
+        });
     },
+
+    toggleBoards: function (element) {
+        element.classList.toggle('hide')
+    },
+
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
     },

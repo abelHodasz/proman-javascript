@@ -68,6 +68,7 @@ export let dom = {
     clickHandler: function (event) {
         if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
             let id = event.target.id.split('-')[2];
+            document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-'+id);
             dom.toggleBoards(element);
         }

@@ -131,3 +131,12 @@ section.board{
 .hide {
     display: none;
 }
+
+
+.rotate180{
+    transform:rotate(-180deg);
+}
+
+.fa-chevron-down{
+    transition: 0.2s all ease;
+}

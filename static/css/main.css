@@ -140,3 +140,7 @@ section.board{
 .fa-chevron-down{
     transition: 0.2s all ease;
 }
+
+.create-button {
+    margin-left: 20px;
+}

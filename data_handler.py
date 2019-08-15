@@ -10,6 +10,9 @@ def get_card_status(status_id):
     statuses = connection.get_statuses()
     return next((status['title'] for status in statuses if status['id'] == str(status_id)), 'Unknown')
 
+def create_card(data):
+    return connection.execute_dml_statement('INSERT INTO cards (board_id, title, status_id) VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)', variables=data)
+
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 

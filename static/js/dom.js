@@ -20,6 +20,7 @@ export let dom = {
     createBoardBtn: function () {
         let button = document.createElement('button');
         button.textContent = "Create board";
+        button.classList.add('create-button');
         button.onclick = function () {
 
 
@@ -32,7 +33,11 @@ export let dom = {
                 $('#modal').modal('hide');
             });
         };
-        document.querySelector('body').appendChild(button);
+        document.querySelector('.board-container').appendChild(button);
+    },
+
+    addCard: function (boardId, input) {
+        dataHandler.createNewCard(input, boardId, 0, dom.loadBoards);
     },
 
     createBoard: function (input) {
@@ -69,8 +74,20 @@ export let dom = {
         if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
-            let element = document.getElementById('columns-'+id);
+            let element = document.getElementById('columns-' + id);
             dom.toggleBoards(element);
+        }
+        if (event.target.classList.contains('board-add')) {
+            let id = event.target.id.split('-')[2];
+            dom.showModal("Add Card");
+            document.getElementById('form').addEventListener("submit", function (event) {
+                dom.addCard(id, document.getElementById('user-input').value);
+                event.preventDefault();
+                document.getElementById('modal-content').innerHTML = '';
+                $('#modal').modal('hide');
+
+            });
+
         }
     },
 
@@ -117,10 +134,10 @@ export let dom = {
                 <section id="board-${board.id}" class="board">
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
-                    <button class="board-add">Add Card</button>
+                    <button id="add-card-${board.id}" class="board-add">Add Card</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
-                <div id="columns-${board.id}" class="board-columns">
+                <div id="columns-${board.id}" class="board-columns hide">
                     ${columnList}  
                 </div>
                 </section>

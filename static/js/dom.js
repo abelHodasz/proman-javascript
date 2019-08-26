@@ -152,9 +152,7 @@ export let dom = {
                  let column = `
                     <div class="board-column">
                         <div class="board-column-title">${status.title}</div>
-                        <div id="board-${boardId}-col-${status.id}" class="board-column-content">
-                            
-                        </div>
+                        <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
                     </div>`;
 
                 dom._appendToElement(document.querySelector(`#columns-${boardId}`), column);

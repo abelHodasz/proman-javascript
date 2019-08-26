@@ -71,7 +71,7 @@ export let dom = {
     },
 
     clickHandler: function (event) {
-        if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
+        if (event.target.closest('.board-toggle')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-' + id);
@@ -105,9 +105,9 @@ export let dom = {
         });
     },
 
-    
+
     showBoard: function (board, callback) {
-        
+
         let boardHtml = `
                 <section id="board-${board.id}" class="board">
                 <div class="board-header">
@@ -120,7 +120,7 @@ export let dom = {
                 </div>
                 </section>
                 `;
-        
+
         this._appendToElement(document.querySelector('#boards'), boardHtml);
 
         callback()
@@ -163,25 +163,25 @@ export let dom = {
             }
         })
     },
-    
+
     showBoards: function (boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
         document.getElementById('boards').remove();
         let boardList = '';
-        
+
         const outerHtml = `
                 <div id="boards" class="board-container">
                     
                 </div>
             `;
-        
+
         this._appendToElement(document.querySelector('body'), outerHtml);
 
         for(let board of boards){
             dom.showBoard(board,function () {
                 dom.showStatuses(board.id, function () {
-                    
+
                 })
             })
         }

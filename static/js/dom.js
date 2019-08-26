@@ -186,53 +186,6 @@ export let dom = {
             })
         }
 
-        /*dataHandler.getStatuses((statuses) => {
-
-
-
-
-            for(let board of boards){
-                let columnList = '';
-                for (let status of statuses) {
-                    columnList += `
-                    <div class="board-column">
-                        <div class="board-column-title">${status.title}</div>
-                        <div class="board-column-content">
-                            <div class="card">
-                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                                <div class="card-title">Card 1</div>
-                            </div>
-                            <div class="card">
-                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                                <div class="card-title">Card 2</div>
-                            </div>
-                        </div>
-                    </div>`
-                }
-
-                boardList += `
-                <section id="board-${board.id}" class="board">
-                <div class="board-header">
-                    <span class="board-title">${board.title}</span>
-                    <button id="add-card-${board.id}" class="board-add">Add Card</button>
-                    <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
-                </div>
-                <div id="columns-${board.id}" class="board-columns hide">
-                    ${columnList}  
-                </div>
-                </section>
-                `;
-            }
-
-            const outerHtml = `
-                <div id="boards" class="board-container">
-                    ${boardList}
-                </div>
-            `;
-
-            this._appendToElement(document.querySelector('body'), outerHtml);
-
-        });*/
     },
 
     toggleBoards: function (element) {

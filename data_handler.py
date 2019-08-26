@@ -16,6 +16,17 @@ def create_card(data):
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 
+def get_statuses_by_board_id(board_id):
+    return connection.execute_select("""SELECT * FROM statuses
+                                     WHERE id IN (SELECT status_id FROM board_statuses
+                                                WHERE board_id = %(board_id)s) """,
+                                    variables={'board_id': board_id})
+
+def get_cards(board_id, status_id):
+    return connection.execute_select("""SELECT title FROM cards
+                                    WHERE board_id = %(board_id)s AND status_id = %(status_id)s
+                                    ORDER BY "order";
+                                    """, variables={'board_id': board_id, 'status_id': status_id})
 
 def get_boards():
    return connection.execute_select('SELECT * FROM boards;')

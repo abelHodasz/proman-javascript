@@ -62,10 +62,14 @@ export let dataHandler = {
         });
     },
     getCard: function (cardId, callback) {
-        // the card is retrieved and then the callback function is called with the card
+        this._api_get(`/card/${cardId}`, (response) => {
+            callback(response);});
     },
+
     createNewBoard: function (boardTitle, callback) {
+
         this._api_get(`/create-board/${boardTitle}`, (response) => {
+            this._data = response;
             callback(response);
         });
     },

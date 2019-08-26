@@ -11,7 +11,9 @@ def get_card_status(status_id):
     return next((status['title'] for status in statuses if status['id'] == str(status_id)), 'Unknown')
 
 def create_card(data):
-    return connection.execute_dml_statement('INSERT INTO cards (board_id, title, status_id) VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)', variables=data)
+    return connection.execute_dml_statement('INSERT INTO cards (board_id, title, status_id) '
+                                            'VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)'
+                                            'RETURNING id ', variables=data)[0]
 
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
@@ -34,8 +36,21 @@ def get_boards():
 
 
 def create_board(title):
-    return connection.execute_dml_statement('INSERT INTO boards (title) VALUES (%(title)s);', variables={'title': title})
+    board = connection.execute_dml_statement("""INSERT INTO boards (title) VALUES (%(title)s)
+                                                RETURNING *;""", variables={'title': title})
 
+    board = {'id': board[0], 'title': board[1] }
+
+    for i in range(4):
+        connection.execute_dml_statement("""INSERT INTO board_statuses VALUES (%(board_id)s, %(i)s)
+                                        ;""", variables={'board_id': board['id'], 'i': i})
+
+    return board
+
+def get_card(card_id):
+    return connection.execute_select("""
+                                    SELECT * from cards
+                                    WHERE id = %(card_id)s""", variables={'card_id': card_id})
 
 
 def get_cards_for_board(board_id):

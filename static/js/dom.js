@@ -37,12 +37,18 @@ export let dom = {
     },
 
     addCard: function (boardId, input) {
-        dataHandler.createNewCard(input, boardId, 0, dom.loadBoards);
+        dataHandler.createNewCard(input, boardId, 0, function (cardId) {
+            dom.showCard(cardId);
+        });
     },
 
     createBoard: function (input) {
-        dataHandler.createNewBoard(input, function (response) {
-        dom.loadBoards()
+        dataHandler.createNewBoard(input, function (board) {
+        dom.showBoard(board,function () {
+                dom.showStatuses(board.id, function () {
+
+                })
+            })
         })
     },
 
@@ -142,6 +148,20 @@ export let dom = {
 
         });
 
+    },
+
+    showCard: function (cardId) {
+        dataHandler.getCard(cardId, function (card) {
+
+            let cardHtml = `<div class="card">
+                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                            <div class="card-title">${card[0].title}</div>
+                        </div>`;
+            console.log(card);
+            console.log(`#board-${card.boardId}-col-${card.statusId}`);
+            dom._appendToElement(document.querySelector(`#board-${card[0].board_id}-col-${card[0].status_id}`), cardHtml);
+
+        });
     },
 
     showStatuses: function (boardId) {

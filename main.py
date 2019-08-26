@@ -57,6 +57,11 @@ def get_statuses_by_id(board_id):
 def get_cards(board_id, status_id):
     return data_handler.get_cards(board_id, status_id)
 
+@app.route("/card/<int:card_id>")
+@json_response
+def get_card(card_id):
+    return data_handler.get_card(card_id)
+
 def main():
     app.run(debug=True)
 

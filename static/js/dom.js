@@ -23,8 +23,6 @@ export let dom = {
         button.classList.add('create-button');
         button.onclick = function () {
 
-
-
             dom.showModal('Create board');
             document.getElementById('form').addEventListener("submit", function (event) {
                 dom.createBoard(document.getElementById('user-input').value);
@@ -71,7 +69,7 @@ export let dom = {
     },
 
     clickHandler: function (event) {
-        if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
+        if (event.target.closest('.board-toggle')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-' + id);
@@ -104,17 +102,10 @@ export let dom = {
             dom.showBoards(boards);
         });
     },
-    showBoards: function (boards) {
-        // shows boards appending them to #boards div
-        // it adds necessary event listeners also
-        document.getElementById('boards').remove();
-        let boardList = '';
-        dataHandler.getStatuses((statuses) => {
-
-            for(let board of boards){
-                let columnList = '';
-                for (let status of statuses) {
-                    columnList += `
+    showBoard: function (statuses, boardList, board) {
+        let columnList = '';
+        for (let status of statuses) {
+            columnList += `
                     <div class="board-column">
                         <div class="board-column-title">${status.title}</div>
                         <div class="board-column-content">
@@ -128,9 +119,9 @@ export let dom = {
                             </div>
                         </div>
                     </div>`
-                }
+        }
 
-                boardList += `
+        boardList += `
                 <section id="board-${board.id}" class="board">
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
@@ -142,6 +133,18 @@ export let dom = {
                 </div>
                 </section>
                 `;
+        return {status, boardList};
+    }, showBoards: function (boards) {
+        // shows boards appending them to #boards div
+        // it adds necessary event listeners also
+        document.getElementById('boards').remove();
+        let boardList = '';
+        dataHandler.getStatuses((statuses) => {
+
+            for(let board of boards){
+                const __ret = this.showBoard(statuses, boardList, board);
+                let status = __ret.status;
+                boardList = __ret.boardList;
             }
 
             const outerHtml = `

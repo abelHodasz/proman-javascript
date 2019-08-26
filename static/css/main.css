@@ -37,6 +37,12 @@ button{
     margin: 0 auto;
 }
 
+.center-on-page{
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+
 section.board{
     margin: 20px;
     border: aliceblue;

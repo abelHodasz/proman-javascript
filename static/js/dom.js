@@ -33,7 +33,7 @@ export let dom = {
                 $('#modal').modal('hide');
             });
         };
-        document.querySelector('.board-container').appendChild(button);
+        document.querySelector('#create-board-btn').appendChild(button);
     },
 
     addCard: function (boardId, input) {

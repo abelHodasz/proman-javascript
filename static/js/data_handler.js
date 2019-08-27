@@ -65,6 +65,10 @@ export let dataHandler = {
         this._api_get(`/card/${cardId}`, (response) => {
             callback(response);});
     },
+    getColumn: function (statusId, callback) {
+        this._api_get(`/column/${statusId}`, (response) => {
+            callback(response);});
+    },
 
     createNewBoard: function (boardTitle, callback) {
 
@@ -76,6 +80,12 @@ export let dataHandler = {
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         let data = {cardTitle, boardId, statusId};
         this._api_post(`/create-card`, data,  (response) => {
+            callback(response);
+        });
+    },
+    createNewColumn: function (columnTitle, boardId, callback) {
+        let data = {columnTitle, boardId};
+        this._api_post(`/create-column`, data,  (response) => {
             callback(response);
         });
     }

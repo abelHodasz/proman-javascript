@@ -24,8 +24,6 @@ export let dom = {
         button.classList.add('create-button');
         button.onclick = function () {
 
-
-
             dom.showModal('Create board');
             document.getElementById('form').addEventListener("submit", function (event) {
                 dom.createBoard(document.getElementById('user-input').value);
@@ -40,6 +38,12 @@ export let dom = {
     addCard: function (boardId, input) {
         dataHandler.createNewCard(input, boardId, 0, function (cardId) {
             dom.showCard(cardId);
+        });
+    },
+
+    addColumn: function (boardId, input) {
+        dataHandler.createNewColumn(input, boardId,function (statusId) {
+            dom.showColumn(boardId, statusId);
         });
     },
 
@@ -85,7 +89,7 @@ export let dom = {
             let element = document.getElementById('columns-' + id);
             dom.toggleBoards(element);
         }
-        if (event.target.classList.contains('board-add')) {
+        else if (event.target.classList.contains('board-add')) {
             let id = event.target.id.split('-')[2];
             dom.showModal("Add Card");
             document.getElementById('form').addEventListener("submit", function (event) {
@@ -97,6 +101,17 @@ export let dom = {
             });
 
         }
+        else if (event.target.closest('.column-add')){
+            let boardId = event.target.id.split('-')[2];
+            dom.showModal("Add Column");
+            document.getElementById('form').addEventListener("submit", function (event) {
+                dom.addColumn(boardId, document.getElementById('user-input').value);
+                event.preventDefault();
+                document.getElementById('modal-content').innerHTML = '';
+                $('#modal').modal('hide');
+
+            });
+        }
     },
 
     init: function () {
@@ -104,7 +119,6 @@ export let dom = {
             dom.clickHandler(event);
         });
         this.createBoardBtn();
-
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
@@ -126,6 +140,7 @@ export let dom = {
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
+                    <button id="add-column-${board.id}" class="column-add">Add Column</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">
@@ -157,6 +172,17 @@ export let dom = {
 
     },
 
+    showColumn: function (boardId, statusId) {
+        dataHandler.getColumn(statusId, function (column) {
+            let columnHtml = `
+                    <div class="board-column">
+                        <div class="board-column-title">${column[0].title}</div>
+                        <div id="board-${boardId}-col-${column[0].id}" class="board-column-content"></div>
+                    </div>`;
+            dom._appendToElement(document.querySelector(`#columns-${boardId}`), columnHtml);
+        })
+    },
+
     showCard: function (cardId) {
         dataHandler.getCard(cardId, function (card) {
 
@@ -173,7 +199,6 @@ export let dom = {
 
     showStatuses: function (boardId) {
         dataHandler.getStatusesByBoardId(boardId, function (statuses) {
-
 
             for(let status of statuses) {
                 let column = `

@@ -22,6 +22,7 @@ def get_boards():
     """
     return data_handler.get_boards()
 
+
 @app.route("/create-board/<name>")
 @json_response
 def create_board(name):
@@ -37,30 +38,42 @@ def get_cards_for_board(board_id: int):
     """
     return data_handler.get_cards_for_board(board_id)
 
+
 @app.route("/get-statuses")
 @json_response
 def get_statuses():
     return data_handler.get_statuses()
+
 
 @app.route("/create-card", methods=['POST'])
 @json_response
 def create_card():
     return  data_handler.create_card(request.json)
 
+
 @app.route("/status/<int:board_id>")
 @json_response
 def get_statuses_by_id(board_id):
     return data_handler.get_statuses_by_board_id(board_id)
+
 
 @app.route("/cards/<int:board_id>/<int:status_id>")
 @json_response
 def get_cards(board_id, status_id):
     return data_handler.get_cards(board_id, status_id)
 
+
 @app.route("/card/<int:card_id>")
 @json_response
 def get_card(card_id):
     return data_handler.get_card(card_id)
+
+
+@app.route("/card/status", methods = ['POST'])
+@json_response
+def set_card_status():
+    data_handler.set_card_status(request.json)
+
 
 def main():
     app.run(debug=True)

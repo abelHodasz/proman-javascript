@@ -129,7 +129,22 @@ export let dom = {
     loadDragula: function(){
         let cards = document.querySelectorAll('.board-column-content');
         let containersArray = Array.from(cards);
-        dragula(containersArray);
+        let drag = dragula(containersArray);
+
+        drag.on('drop', (el, target, source, sibling) => {
+
+            //console.log("el: ", el, "\ntarget:", target, "\nsource:", source, "\nsibling:", sibling);
+            let cardId = el.id.split('-')[1];
+            let statusId = source.id.split('-')[3];
+            let newStatusId = target.id.split('-')[3];
+            if (statusId !== newStatusId){
+                dataHandler.setCardStatus(cardId, newStatusId, ()=>{
+                    console.log("changed card status");
+                });
+            }
+
+        })
+
     },
 
     showBoard: function (board, callback) {

@@ -33,16 +33,22 @@ export let dom = {
                 $('#modal').modal('hide');
             });
         };
-        document.querySelector('.board-container').appendChild(button);
+        document.querySelector('#create-board-btn').appendChild(button);
     },
 
     addCard: function (boardId, input) {
-        dataHandler.createNewCard(input, boardId, 0, dom.loadBoards);
+        dataHandler.createNewCard(input, boardId, 0, function (cardId) {
+            dom.showCard(cardId);
+        });
     },
 
     createBoard: function (input) {
-        dataHandler.createNewBoard(input, function (response) {
-        dom.loadBoards()
+        dataHandler.createNewBoard(input, function (board) {
+        dom.showBoard(board,function () {
+                dom.showStatuses(board.id, function () {
+
+                })
+            })
         })
     },
 
@@ -71,7 +77,7 @@ export let dom = {
     },
 
     clickHandler: function (event) {
-        if (event.target.classList.contains('board-toggle') || event.target.classList.contains('fa-chevron-down')) {
+        if (event.target.closest('.board-toggle')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-' + id);
@@ -104,33 +110,11 @@ export let dom = {
             dom.showBoards(boards);
         });
     },
-    showBoards: function (boards) {
-        // shows boards appending them to #boards div
-        // it adds necessary event listeners also
-        document.getElementById('boards').remove();
-        let boardList = '';
-        dataHandler.getStatuses((statuses) => {
 
-            for(let board of boards){
-                let columnList = '';
-                for (let status of statuses) {
-                    columnList += `
-                    <div class="board-column">
-                        <div class="board-column-title">${status.title}</div>
-                        <div class="board-column-content">
-                            <div class="card">
-                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                                <div class="card-title">Card 1</div>
-                            </div>
-                            <div class="card">
-                                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
-                                <div class="card-title">Card 2</div>
-                            </div>
-                        </div>
-                    </div>`
-                }
 
-                boardList += `
+    showBoard: function (board, callback) {
+
+        let boardHtml = `
                 <section id="board-${board.id}" class="board">
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
@@ -138,21 +122,88 @@ export let dom = {
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">
-                    ${columnList}  
+                      
                 </div>
                 </section>
                 `;
+
+        this._appendToElement(document.querySelector('#boards'), boardHtml);
+
+        callback()
+    },
+
+    showCards: function (boardId, statusId) {
+
+        dataHandler.getCardsByBoardId(boardId, statusId, function (cards) {
+            for(let card of cards) {
+
+                let cardHtml = `<div class="card">
+                        <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                        <div class="card-title">${card.title}</div>
+                    </div>`;
+
+            dom._appendToElement(document.querySelector(`#board-${boardId}-col-${statusId}`), cardHtml)
+
             }
 
-            const outerHtml = `
+        });
+
+    },
+
+    showCard: function (cardId) {
+        dataHandler.getCard(cardId, function (card) {
+
+            let cardHtml = `<div class="card">
+                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                            <div class="card-title">${card[0].title}</div>
+                        </div>`;
+            console.log(card);
+            console.log(`#board-${card.boardId}-col-${card.statusId}`);
+            dom._appendToElement(document.querySelector(`#board-${card[0].board_id}-col-${card[0].status_id}`), cardHtml);
+
+        });
+    },
+
+    showStatuses: function (boardId) {
+        dataHandler.getStatusesByBoardId(boardId, function (statuses) {
+
+
+            for(let status of statuses) {
+                 let column = `
+                    <div class="board-column">
+                        <div class="board-column-title">${status.title}</div>
+                        <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
+                    </div>`;
+
+                dom._appendToElement(document.querySelector(`#columns-${boardId}`), column);
+                dom.showCards(boardId, status.id)
+
+            }
+        })
+    },
+
+    showBoards: function (boards) {
+        // shows boards appending them to #boards div
+        // it adds necessary event listeners also
+        document.getElementById('boards').remove();
+        let boardList = '';
+
+        const outerHtml = `
                 <div id="boards" class="board-container">
-                    ${boardList}
+                    
                 </div>
             `;
 
-            this._appendToElement(document.querySelector('body'), outerHtml);
+        this._appendToElement(document.querySelector('body'), outerHtml);
 
-        });
+        for(let board of boards){
+            dom.showBoard(board,function () {
+                dom.showStatuses(board.id, function () {
+
+                })
+            })
+        }
+
     },
 
     toggleBoards: function (element) {
@@ -162,9 +213,6 @@ export let dom = {
     loadCards: function (boardId) {
         // retrieves cards and makes showCards called
     },
-    showCards: function (cards) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
-    },
+
     // here comes more features
 };

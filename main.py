@@ -47,6 +47,21 @@ def get_statuses():
 def create_card():
     return  data_handler.create_card(request.json)
 
+@app.route("/status/<int:board_id>")
+@json_response
+def get_statuses_by_id(board_id):
+    return data_handler.get_statuses_by_board_id(board_id)
+
+@app.route("/cards/<int:board_id>/<int:status_id>")
+@json_response
+def get_cards(board_id, status_id):
+    return data_handler.get_cards(board_id, status_id)
+
+@app.route("/card/<int:card_id>")
+@json_response
+def get_card(card_id):
+    return data_handler.get_card(card_id)
+
 def main():
     app.run(debug=True)
 

@@ -10,6 +10,7 @@ body{
     min-width: 620px;
     background: #ddd url(http://cdn.backgroundhost.com/backgrounds/subtlepatterns/diagonal-noise.png);
     font-family: sans-serif;
+    line-height: 1;
 }
 
 h1, .board-title, .board-column-title{
@@ -36,6 +37,12 @@ button{
     max-width: 960px;
     margin: 0 auto;
 }
+
+.center-on-page{
+    max-width: 960px;
+    margin: 0 auto;
+}
+
 
 section.board{
     margin: 20px;
@@ -126,6 +133,7 @@ section.board{
 
 .card-title{
     padding-right: 16px;
+    margin-bottom: 0;
 }
 
 .hide {

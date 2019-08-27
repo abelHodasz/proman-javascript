@@ -74,6 +74,7 @@ export let dom = {
         document.getElementById('modal-content').innerHTML = modal;
 
         $('#modal').modal('show');
+        document.getElementById('user-input').focus()
     },
 
     clickHandler: function (event) {

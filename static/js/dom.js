@@ -93,10 +93,23 @@ export let dom = {
                 event.preventDefault();
                 document.getElementById('modal-content').innerHTML = '';
                 $('#modal').modal('hide');
-
             });
-
         }
+
+        if (event.target.closest('.board-delete')) {
+            let boardId = event.target.id.split('-')[2];
+            dataHandler.deleteBoard(boardId, function () {
+                document.getElementById(`board-${boardId}`).remove()
+            })
+        }
+
+        if (event.target.closest('.card-remove')) {
+            let cardId = event.target.id.split('-')[2];
+            dataHandler.deleteCard(cardId, function () {
+                document.getElementById(`card-${cardId}`).remove()
+            })
+        }
+
     },
 
     init: function () {
@@ -126,6 +139,7 @@ export let dom = {
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
+                    <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">
@@ -144,8 +158,8 @@ export let dom = {
         dataHandler.getCardsByBoardId(boardId, statusId, function (cards) {
             for(let card of cards) {
 
-                let cardHtml = `<div class="card">
-                        <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                let cardHtml = `<div id="card-${card.id}" class="card">
+                        <div class="card-remove"><i id="delete-card-${card.id}" class="fas fa-trash-alt"></i></div>
                         <div class="card-title">${card.title}</div>
                     </div>`;
 
@@ -160,12 +174,10 @@ export let dom = {
     showCard: function (cardId) {
         dataHandler.getCard(cardId, function (card) {
 
-            let cardHtml = `<div class="card">
-                            <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+            let cardHtml = `<div id="card-${cardId}" class="card">
+                            <div class="card-remove"><i id="delete-card-${cardId}" class="fas fa-trash-alt"></i></div>
                             <div class="card-title">${card[0].title}</div>
                         </div>`;
-            console.log(card);
-            console.log(`#board-${card.boardId}-col-${card.statusId}`);
             dom._appendToElement(document.querySelector(`#board-${card[0].board_id}-col-${card[0].status_id}`), cardHtml);
 
         });

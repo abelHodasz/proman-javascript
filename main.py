@@ -62,6 +62,17 @@ def get_cards(board_id, status_id):
 def get_card(card_id):
     return data_handler.get_card(card_id)
 
+@app.route("/board/delete/<int:board_id>")
+@json_response
+def delete_board(board_id):
+    return data_handler.delete_board(board_id)
+
+@app.route("/card/delete/<int:card_id>")
+@json_response
+def delete_card(card_id):
+    return data_handler.delete_card(card_id)
+
+
 def main():
     app.run(debug=True)
 

@@ -25,7 +25,7 @@ def get_statuses_by_board_id(board_id):
                                     variables={'board_id': board_id})
 
 def get_cards(board_id, status_id):
-    return connection.execute_select("""SELECT title FROM cards
+    return connection.execute_select("""SELECT title, id FROM cards
                                     WHERE board_id = %(board_id)s AND status_id = %(status_id)s
                                     ORDER BY "order";
                                     """, variables={'board_id': board_id, 'status_id': status_id})
@@ -51,6 +51,19 @@ def get_card(card_id):
     return connection.execute_select("""
                                     SELECT * from cards
                                     WHERE id = %(card_id)s""", variables={'card_id': card_id})
+
+
+def delete_board(board_id):
+    return connection.execute_dml_statement("""
+                                            DELETE FROM boards
+                                            WHERE id = %(board_id)s
+                                            """, variables={'board_id': board_id})
+
+def delete_card(card_id):
+    return connection.execute_dml_statement("""
+                                            DELETE FROM cards
+                                            WHERE id = %(card_id)s
+                                            """, variables={'card_id': card_id})
 
 
 def get_cards_for_board(board_id):

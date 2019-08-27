@@ -1,6 +1,7 @@
 // It uses data_handler.js to visualize elements
 import { dataHandler } from "./data_handler.js";
 
+
 export let dom = {
     _appendToElement: function (elementToExtend, textToAppend, prepend = false) {
         // function to append new DOM elements (represented by a string) to an existing DOM element
@@ -44,7 +45,7 @@ export let dom = {
 
     createBoard: function (input) {
         dataHandler.createNewBoard(input, function (board) {
-        dom.showBoard(board,function () {
+            dom.showBoard(board,function () {
                 dom.showStatuses(board.id, function () {
 
                 })
@@ -100,7 +101,7 @@ export let dom = {
 
     init: function () {
         document.addEventListener('click', function (event) {
-         dom.clickHandler(event);
+            dom.clickHandler(event);
         });
         this.createBoardBtn();
 
@@ -110,8 +111,13 @@ export let dom = {
         dataHandler.getBoards(function(boards){
             dom.showBoards(boards);
         });
-    },
 
+    },
+    loadDragula: function(){
+        let cards = document.querySelectorAll('.board-column-content');
+        let containersArray = Array.from(cards);
+        dragula(containersArray);
+    },
 
     showBoard: function (board, callback) {
 
@@ -143,10 +149,10 @@ export let dom = {
                         <div class="card-title">${card.title}</div>
                     </div>`;
 
-            dom._appendToElement(document.querySelector(`#board-${boardId}-col-${statusId}`), cardHtml)
+                dom._appendToElement(document.querySelector(`#board-${boardId}-col-${statusId}`), cardHtml)
 
             }
-
+            dom.loadDragula()
         });
 
     },
@@ -170,7 +176,7 @@ export let dom = {
 
 
             for(let status of statuses) {
-                 let column = `
+                let column = `
                     <div class="board-column">
                         <div class="board-column-title">${status.title}</div>
                         <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>

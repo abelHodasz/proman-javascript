@@ -160,3 +160,7 @@ section.board{
 .handle{
     cursor:pointer;
 }
+
+.card-title{
+    cursor:pointer;
+}

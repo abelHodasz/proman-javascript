@@ -63,6 +63,12 @@ def rename_column():
     return  data_handler.rename_column(request.json)
 
 
+@app.route("/rename-card", methods=['POST'])
+@json_response
+def rename_card():
+    return  data_handler.rename_card(request.json)
+
+
 @app.route("/status/<int:board_id>")
 @json_response
 def get_statuses_by_id(board_id):

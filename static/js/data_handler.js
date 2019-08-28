@@ -89,6 +89,14 @@ export let dataHandler = {
             callback(response);
         });
     },
+
+    renameCard: function (cardId, newTitle, callback) {
+        let data = {cardId, newTitle};
+        this._api_post(`/rename-card`, data,  (response) => {
+            callback(response);
+        });
+    },
+
     createNewColumn: function (columnTitle, boardId, callback) {
         let data = {columnTitle, boardId};
         this._api_post(`/create-column`, data,  (response) => {

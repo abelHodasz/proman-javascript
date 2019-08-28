@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
 
 
 export let dom = {
@@ -42,14 +42,14 @@ export let dom = {
     },
 
     addColumn: function (boardId, input) {
-        dataHandler.createNewColumn(input, boardId,function (statusId) {
+        dataHandler.createNewColumn(input, boardId, function (statusId) {
             dom.showColumn(boardId, statusId);
         });
     },
 
     createBoard: function (input) {
         dataHandler.createNewBoard(input, function (board) {
-            dom.showBoard(board,function () {
+            dom.showBoard(board, function () {
                 dom.showStatuses(board.id, function () {
 
                 })
@@ -83,13 +83,21 @@ export let dom = {
     },
 
     clickHandler: function (event) {
+        if (event.target.id !== 'colRenameInput') {
+            try {
+                let evt = new KeyboardEvent('keyup', {'keyCode':27, 'which':27});
+                document.getElementById('colRenameInput').dispatchEvent(evt);
+            } catch (error) {
+
+            }
+        }
+
         if (event.target.closest('.board-toggle')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-' + id);
             dom.toggleBoards(element);
-        }
-        else if (event.target.classList.contains('board-add')) {
+        } else if (event.target.classList.contains('board-add')) {
             let id = event.target.id.split('-')[2];
             dom.showModal("Add Card");
             document.getElementById('form').addEventListener("submit", function (event) {
@@ -98,20 +106,17 @@ export let dom = {
                 document.getElementById('modal-content').innerHTML = '';
                 $('#modal').modal('hide');
             });
-        }
-        else if (event.target.closest('.board-delete')) {
+        } else if (event.target.closest('.board-delete')) {
             let boardId = event.target.id.split('-')[2];
             dataHandler.deleteBoard(boardId, function () {
                 document.getElementById(`board-${boardId}`).remove()
             })
-        }
-        else if (event.target.closest('.card-remove')) {
+        } else if (event.target.closest('.card-remove')) {
             let cardId = event.target.id.split('-')[2];
             dataHandler.deleteCard(cardId, function () {
                 document.getElementById(`card-${cardId}`).remove()
             })
-        }
-        else if (event.target.closest('.column-add')){
+        } else if (event.target.closest('.column-add')) {
             let boardId = event.target.id.split('-')[2];
             dom.showModal("Add Column");
             document.getElementById('form').addEventListener("submit", function (event) {
@@ -121,6 +126,8 @@ export let dom = {
                 $('#modal').modal('hide');
 
             });
+        } else if (event.target.id.split('-')[0] === 'colTitle') {
+            dom.renameColumn(event.target.id);
         }
     },
 
@@ -130,14 +137,36 @@ export let dom = {
         });
         this.createBoardBtn();
     },
+    renameColumn: function (id) {
+        let statusId = id.split('-')[3];
+
+        let inputHtml = `<input type="text" id="colRenameInput" minlength="1">`;
+
+        let title = document.getElementById(id);
+        let oldTitleHtml = title.innerHTML;
+        title.innerHTML = inputHtml;
+
+        let input = document.getElementById("colRenameInput");
+        input.focus();
+        input.addEventListener('keyup', function (event) {
+            if (event.keyCode === 13) {
+                dataHandler.renameColumn(statusId, input.value, function () {
+                });
+                title.innerText = input.value;
+            } else if (event.keyCode === 27) {
+                title.innerHTML = oldTitleHtml;
+            }
+        });
+
+    },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
-        dataHandler.getBoards(function(boards){
+        dataHandler.getBoards(function (boards) {
             dom.showBoards(boards);
         });
 
     },
-    loadDragula: function(){
+    loadDragula: function () {
         let cards = document.querySelectorAll('.board-column-content');
         let containersArray = Array.from(cards);
         let drag = dragula(containersArray);
@@ -148,14 +177,12 @@ export let dom = {
             let cardId = el.id.split('-')[1];
             let statusId = source.id.split('-')[3];
             let newStatusId = target.id.split('-')[3];
-            if (statusId !== newStatusId){
-                dataHandler.setCardStatus(cardId, newStatusId, ()=>{
+            if (statusId !== newStatusId) {
+                dataHandler.setCardStatus(cardId, newStatusId, () => {
                     console.log("changed card status");
                 });
             }
-
         })
-
     },
 
     showBoard: function (board, callback) {
@@ -165,8 +192,8 @@ export let dom = {
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
-                    <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="add-column-${board.id}" class="column-add">Add Column</button>
+                    <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">
@@ -183,7 +210,7 @@ export let dom = {
     showCards: function (boardId, statusId) {
 
         dataHandler.getCardsByBoardId(boardId, statusId, function (cards) {
-            for(let card of cards) {
+            for (let card of cards) {
 
                 let cardHtml = `<div id="card-${card.id}" class="card">
                         <div class="card-remove"><i id="delete-card-${card.id}" class="fas fa-trash-alt"></i></div>
@@ -195,14 +222,13 @@ export let dom = {
             }
             dom.loadDragula()
         });
-
     },
 
     showColumn: function (boardId, statusId) {
         dataHandler.getColumn(statusId, function (column) {
             let columnHtml = `
                     <div class="board-column">
-                        <div class="board-column-title">${column[0].title}</div>
+                        <div id="colTitle-${boardId}-col-${statusId}" class="board-column-title">${column[0].title}</div>
                         <div id="board-${boardId}-col-${column[0].id}" class="board-column-content"></div>
                     </div>`;
             dom._appendToElement(document.querySelector(`#columns-${boardId}`), columnHtml);
@@ -211,7 +237,6 @@ export let dom = {
 
     showCard: function (cardId) {
         dataHandler.getCard(cardId, function (card) {
-
             let cardHtml = `<div id="card-${cardId}" class="card">
                             <div class="card-remove"><i id="delete-card-${cardId}" class="fas fa-trash-alt"></i></div>
                             <div class="card-title">${card[0].title}</div>
@@ -224,10 +249,10 @@ export let dom = {
     showStatuses: function (boardId) {
         dataHandler.getStatusesByBoardId(boardId, function (statuses) {
 
-            for(let status of statuses) {
+            for (let status of statuses) {
                 let column = `
                     <div class="board-column">
-                        <div class="board-column-title">${status.title}</div>
+                        <div id="colTitle-${boardId}-col-${status.id}" class="board-column-title">${status.title}</div>
                         <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
                     </div>`;
 
@@ -252,8 +277,8 @@ export let dom = {
 
         this._appendToElement(document.querySelector('body'), outerHtml);
 
-        for(let board of boards){
-            dom.showBoard(board,function () {
+        for (let board of boards) {
+            dom.showBoard(board, function () {
                 dom.showStatuses(board.id, function () {
 
                 })

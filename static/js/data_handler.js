@@ -96,6 +96,13 @@ export let dataHandler = {
         });
     },
 
+    renameColumn: function (statusId, newTitle, callback) {
+        let data = {statusId, newTitle};
+        this._api_post(`/rename-column`, data,  (response) => {
+            callback(response);
+        });
+    },
+
     deleteBoard: function (boardId, callback) {
         this._api_get(`/board/delete/${boardId}`, (response) => {
             callback(response);

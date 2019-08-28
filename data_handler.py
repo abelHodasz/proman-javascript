@@ -26,13 +26,17 @@ def create_column(data):
 
     return str(statusId)
 
+def rename_column(data):
+    return connection.execute_dml_statement("""UPDATE statuses SET title = %(newTitle)s WHERE id = %(statusId)s;""", variables=data)
+
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 
 def get_statuses_by_board_id(board_id):
     return connection.execute_select("""SELECT * FROM statuses
-                                     WHERE id IN (SELECT status_id FROM board_statuses
-                                                WHERE board_id = %(board_id)s) """,
+                                        WHERE id IN (SELECT status_id FROM board_statuses
+                                                    WHERE board_id = %(board_id)s)
+                                        ORDER BY id""",
                                     variables={'board_id': board_id})
 
 def get_cards(board_id, status_id):

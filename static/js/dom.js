@@ -105,6 +105,13 @@ export let dom = {
                 document.getElementById(`board-${boardId}`).remove()
             })
         }
+        else if (event.target.closest('.column-delete')) {
+            let statusId = event.target.id.split('-')[5];
+            let boardId = event.target.id.split('-')[3];
+            dataHandler.deleteColumn(boardId, statusId, function () {
+                document.querySelector(`#board-${boardId}-status-${statusId}`).remove();
+            })
+        }
         else if (event.target.closest('.card-remove')) {
             let cardId = event.target.id.split('-')[2];
             dataHandler.deleteCard(cardId, function () {
@@ -209,8 +216,9 @@ export let dom = {
     showColumn: function (boardId, statusId) {
         dataHandler.getColumn(statusId, function (column) {
             let columnHtml = `
-                    <div class="board-column">
-                        <div class="handle board-column-title">${column[0].title}</div>
+                    <div class="board-column" id = "board-${boardId}-status-${statusId}">
+                        <div  class="handle board-column-title">${column[0].title}<div class="column-delete"><i id="delete-column-board-${boardId}-status-${statusId}" class="fas fa-trash-alt"></i></div></div>
+                       
                         <div id="board-${boardId}-col-${column[0].id}" class="board-column-content"></div>
                     </div>`;
             dom._appendToElement(document.querySelector(`#columns-${boardId}`), columnHtml);
@@ -234,9 +242,9 @@ export let dom = {
 
             for(let status of statuses) {
                 let column = `
-                    <div class="board-column">
-                        <div class="handle board-column-title">${status.title}</div>
-
+                    <div class="board-column" id = "board-${boardId}-status-${status.id}">
+                        <div class="handle board-column-title">${status.title} <div class="column-delete"><i id="delete-column-board-${boardId}-status-${status.id}" class="fas fa-trash-alt"></i></div></div>
+                        
                         <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
                     </div>`;
 

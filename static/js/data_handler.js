@@ -107,6 +107,11 @@ export let dataHandler = {
             callback(response);
         });
     },
+    deleteColumn: function(boardId, statusId, callback){
+         this._api_get(`/column/delete/${boardId}/${statusId}`, (response) => {
+            callback(response);
+        });
+    }
 
     // here comes more features
 };

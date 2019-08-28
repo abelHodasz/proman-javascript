@@ -82,6 +82,14 @@ def delete_card(card_id):
                                             """, variables={'card_id': card_id})
 
 
+def delete_column(board_id,status_id):
+    return connection.execute_dml_statement("""
+                                            DELETE FROM board_statuses
+                                            WHERE board_id = %(board_id)s
+                                            AND status_id = %(status_id)s
+    """, variables={'board_id':board_id, 'status_id':status_id})
+
+
 def set_card_status(data):
     return connection.execute_dml_statement("""UPDATE cards SET status_id = %(statusId)s
                                             WHERE id = %(cardId)s

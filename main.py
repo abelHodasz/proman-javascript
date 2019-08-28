@@ -93,6 +93,12 @@ def delete_card(card_id):
     return data_handler.delete_card(card_id)
 
 
+@app.route("/column/delete/<int:board_id>/<int:status_id>")
+@json_response
+def delete_column(board_id, status_id):
+    return data_handler.delete_column(board_id,status_id)
+
+
 @app.route("/card/status", methods = ['POST'])
 @json_response
 def set_card_status():

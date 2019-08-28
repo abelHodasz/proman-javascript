@@ -85,3 +85,19 @@ def get_cards_for_board(board_id):
             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
             matching_cards.append(card)
     return matching_cards
+
+
+def set_board_title(data):
+    return connection.execute_dml_statement('''
+                                            UPDATE boards
+                                            SET title = %(boardTitle)s
+                                            WHERE id = %(boardId)s;
+                                            ''', variables=data)
+
+
+def get_board_by_id(board_id):
+    return connection.execute_select('''
+                                    SELECT *
+                                    FROM boards
+                                    WHERE id = %(board_id)s;
+                                    ''', {'board_id': board_id})

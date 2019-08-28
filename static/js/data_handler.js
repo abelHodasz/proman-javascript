@@ -39,7 +39,12 @@ export let dataHandler = {
         });
     },
     getBoard: function (boardId, callback) {
+        this._api_get(`/boards/${boardId}`, (response)=>{
+            this.data = response;
+            callback(response);
+        })
         // the board is retrieved and then the callback function is called with the board
+
     },
     getStatuses: function (callback) {
        this._api_get(`/get-statuses`, (response) => {
@@ -95,6 +100,13 @@ export let dataHandler = {
             callback(response);
         });
     },
+
+    renameBoard: function (boardId, boardTitle, callback) {
+        let data = {boardId, boardTitle};
+        this._api_post(`/boards/${boardId}/rename`, data, (response) => {
+            callback(response);
+        });
+    }
 
     // here comes more features
 };

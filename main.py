@@ -48,7 +48,7 @@ def get_statuses():
 @app.route("/create-card", methods=['POST'])
 @json_response
 def create_card():
-    return  data_handler.create_card(request.json)
+    return data_handler.create_card(request.json)
 
 
 @app.route("/status/<int:board_id>")
@@ -68,10 +68,12 @@ def get_cards(board_id, status_id):
 def get_card(card_id):
     return data_handler.get_card(card_id)
 
+
 @app.route("/board/delete/<int:board_id>")
 @json_response
 def delete_board(board_id):
     return data_handler.delete_board(board_id)
+
 
 @app.route("/card/delete/<int:card_id>")
 @json_response
@@ -79,11 +81,22 @@ def delete_card(card_id):
     return data_handler.delete_card(card_id)
 
 
-
-@app.route("/card/status", methods = ['POST'])
+@app.route("/card/status", methods=['POST'])
 @json_response
 def set_card_status():
     data_handler.set_card_status(request.json)
+
+
+@app.route("/boards/<int:board_id>/rename", methods=['POST'])
+@json_response
+def rename_board(board_id):
+    data_handler.set_board_title(request.json)
+
+
+@app.route("/boards/<int:board_id>")
+@json_response
+def get_board(board_id):
+    data_handler.get_board_by_id(board_id)
 
 
 def main():

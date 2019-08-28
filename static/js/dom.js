@@ -1,5 +1,5 @@
 // It uses data_handler.js to visualize elements
-import { dataHandler } from "./data_handler.js";
+import {dataHandler} from "./data_handler.js";
 
 
 export let dom = {
@@ -25,7 +25,6 @@ export let dom = {
         button.onclick = function () {
 
 
-
             dom.showModal('Create board');
             document.getElementById('form').addEventListener("submit", function (event) {
                 dom.createBoard(document.getElementById('user-input').value);
@@ -45,7 +44,7 @@ export let dom = {
 
     createBoard: function (input) {
         dataHandler.createNewBoard(input, function (board) {
-            dom.showBoard(board,function () {
+            dom.showBoard(board, function () {
                 dom.showStatuses(board.id, function () {
 
                 })
@@ -110,6 +109,29 @@ export let dom = {
             })
         }
 
+        if (event.target.closest('.board-title')) {
+            let boardId = event.target.id.split('-')[2];
+            document.getElementById(event.target.id).innerHTML = `
+                <form id="rename-form">
+                    <input type="text" id="rename-input">
+                    <button id="save-btn-${boardId}" type="submit" class="btn btn-primary btn-save">Save</button>
+                </form>`;
+            document.getElementById('rename-form').addEventListener('submit', function () {
+                let boardId = event.target.id.split('-')[2];
+                let title = document.getElementById('rename-input').value;
+                event.preventDefault();
+                dataHandler.renameBoard(boardId, title, function () {
+                /*dataHandler.getBoard(boardId,function (board) {
+                    dom.showBoard(board, function () {
+                        
+                    })
+                })*/
+
+                dom.loadBoards();
+                });
+            })
+
+        }
     },
 
     init: function () {
@@ -121,12 +143,12 @@ export let dom = {
     },
     loadBoards: function () {
         // retrieves boards and makes showBoards called
-        dataHandler.getBoards(function(boards){
+        dataHandler.getBoards(function (boards) {
             dom.showBoards(boards);
         });
 
     },
-    loadDragula: function(){
+    loadDragula: function () {
         let cards = document.querySelectorAll('.board-column-content');
         let containersArray = Array.from(cards);
         let drag = dragula(containersArray);
@@ -137,8 +159,8 @@ export let dom = {
             let cardId = el.id.split('-')[1];
             let statusId = source.id.split('-')[3];
             let newStatusId = target.id.split('-')[3];
-            if (statusId !== newStatusId){
-                dataHandler.setCardStatus(cardId, newStatusId, ()=>{
+            if (statusId !== newStatusId) {
+                dataHandler.setCardStatus(cardId, newStatusId, () => {
                     console.log("changed card status");
                 });
             }
@@ -152,7 +174,7 @@ export let dom = {
         let boardHtml = `
                 <section id="board-${board.id}" class="board">
                 <div class="board-header">
-                    <span class="board-title">${board.title}</span>
+                    <span class="board-title" id="board-title-${board.id}">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
                     <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
@@ -171,7 +193,7 @@ export let dom = {
     showCards: function (boardId, statusId) {
 
         dataHandler.getCardsByBoardId(boardId, statusId, function (cards) {
-            for(let card of cards) {
+            for (let card of cards) {
 
                 let cardHtml = `<div id="card-${card.id}" class="card">
                         <div class="card-remove"><i id="delete-card-${card.id}" class="fas fa-trash-alt"></i></div>
@@ -202,7 +224,7 @@ export let dom = {
         dataHandler.getStatusesByBoardId(boardId, function (statuses) {
 
 
-            for(let status of statuses) {
+            for (let status of statuses) {
                 let column = `
                     <div class="board-column">
                         <div class="board-column-title">${status.title}</div>
@@ -230,8 +252,8 @@ export let dom = {
 
         this._appendToElement(document.querySelector('body'), outerHtml);
 
-        for(let board of boards){
-            dom.showBoard(board,function () {
+        for (let board of boards) {
+            dom.showBoard(board, function () {
                 dom.showStatuses(board.id, function () {
 
                 })

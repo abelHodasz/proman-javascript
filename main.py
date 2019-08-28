@@ -51,6 +51,18 @@ def create_card():
     return  data_handler.create_card(request.json)
 
 
+@app.route("/create-column", methods=['POST'])
+@json_response
+def create_column():
+    return  data_handler.create_column(request.json)
+
+
+@app.route("/rename-column", methods=['POST'])
+@json_response
+def rename_column():
+    return  data_handler.rename_column(request.json)
+
+
 @app.route("/status/<int:board_id>")
 @json_response
 def get_statuses_by_id(board_id):
@@ -68,16 +80,23 @@ def get_cards(board_id, status_id):
 def get_card(card_id):
     return data_handler.get_card(card_id)
 
+
+@app.route("/column/<int:status_id>")
+@json_response
+def get_column(status_id):
+    return data_handler.get_column(status_id)
+
+
 @app.route("/board/delete/<int:board_id>")
 @json_response
 def delete_board(board_id):
     return data_handler.delete_board(board_id)
 
+
 @app.route("/card/delete/<int:card_id>")
 @json_response
 def delete_card(card_id):
     return data_handler.delete_card(card_id)
-
 
 
 @app.route("/card/status", methods = ['POST'])

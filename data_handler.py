@@ -16,17 +16,28 @@ def create_card(data):
                                             'VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)'
                                             'RETURNING id ', variables=data)[0]
 
+def create_column(data):
+    statusId = connection.execute_dml_statement('INSERT INTO statuses (title) '
+                                            'VALUES (%(columnTitle)s)'
+                                            'RETURNING id ', variables=data)[0]
+
+    connection.execute_dml_statement("""INSERT INTO board_statuses VALUES (%(board_id)s, %(statusId)s)
+                                        ;""", variables={'board_id': data['boardId'], 'statusId': statusId})
+
+    return str(statusId)
+
+def rename_column(data):
+    return connection.execute_dml_statement("""UPDATE statuses SET title = %(newTitle)s WHERE id = %(statusId)s;""", variables=data)
 
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 
-
 def get_statuses_by_board_id(board_id):
     return connection.execute_select("""SELECT * FROM statuses
-                                     WHERE id IN (SELECT status_id FROM board_statuses
-                                                WHERE board_id = %(board_id)s) """,
+                                        WHERE id IN (SELECT status_id FROM board_statuses
+                                                    WHERE board_id = %(board_id)s)
+                                        ORDER BY id""",
                                     variables={'board_id': board_id})
-
 
 def get_cards(board_id, status_id):
     return connection.execute_select("""SELECT * FROM cards
@@ -55,6 +66,11 @@ def get_card(card_id):
     return connection.execute_select("""
                                     SELECT * from cards
                                     WHERE id = %(card_id)s""", variables={'card_id': card_id})
+
+def get_column(status_id):
+    return connection.execute_select("""
+                                    SELECT * from statuses
+                                    WHERE id = %(status_id)s""", variables={'status_id': status_id})
 
 
 def delete_board(board_id):

@@ -91,7 +91,8 @@ export let dom = {
 
             }
         }
-        else if (event.target.id !== 'cardRenameInput') {
+
+        if (event.target.id !== 'cardRenameInput') {
             try {
                 let evt = new KeyboardEvent('keyup', {'keyCode': 27, 'which': 27});
                 document.getElementById('cardRenameInput').dispatchEvent(evt);

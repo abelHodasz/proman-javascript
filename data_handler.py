@@ -10,6 +10,7 @@ def get_card_status(status_id):
     statuses = connection.get_statuses()
     return next((status['title'] for status in statuses if status['id'] == str(status_id)), 'Unknown')
 
+
 def create_card(data):
     return connection.execute_dml_statement('INSERT INTO cards (board_id, title, status_id) '
                                             'VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)'
@@ -35,14 +36,14 @@ def get_statuses_by_board_id(board_id):
                                     variables={'board_id': board_id})
 
 def get_cards(board_id, status_id):
-    return connection.execute_select("""SELECT title FROM cards
+    return connection.execute_select("""SELECT * FROM cards
                                     WHERE board_id = %(board_id)s AND status_id = %(status_id)s
                                     ORDER BY "order";
                                     """, variables={'board_id': board_id, 'status_id': status_id})
 
-def get_boards():
-   return connection.execute_select('SELECT * FROM boards;')
 
+def get_boards():
+    return connection.execute_select('SELECT * FROM boards;')
 
 
 def create_board(title):
@@ -54,8 +55,8 @@ def create_board(title):
     for i in range(4):
         connection.execute_dml_statement("""INSERT INTO board_statuses VALUES (%(board_id)s, %(i)s)
                                         ;""", variables={'board_id': board['id'], 'i': i})
-
     return board
+
 
 def get_card(card_id):
     return connection.execute_select("""
@@ -66,6 +67,25 @@ def get_column(status_id):
     return connection.execute_select("""
                                     SELECT * from statuses
                                     WHERE id = %(status_id)s""", variables={'status_id': status_id})
+
+
+def delete_board(board_id):
+    return connection.execute_dml_statement("""
+                                            DELETE FROM boards
+                                            WHERE id = %(board_id)s
+                                            """, variables={'board_id': board_id})
+
+def delete_card(card_id):
+    return connection.execute_dml_statement("""
+                                            DELETE FROM cards
+                                            WHERE id = %(card_id)s
+                                            """, variables={'card_id': card_id})
+
+
+def set_card_status(data):
+    return connection.execute_dml_statement("""UPDATE cards SET status_id = %(statusId)s
+                                            WHERE id = %(cardId)s
+    """, variables=data)
 
 
 def get_cards_for_board(board_id):

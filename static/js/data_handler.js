@@ -39,10 +39,6 @@ export let dataHandler = {
         });
     },
     getBoard: function (boardId, callback) {
-        this._api_get(`/boards/${boardId}`, (response)=>{
-            this.data = response;
-            callback(response);
-        })
         // the board is retrieved and then the callback function is called with the board
 
     },

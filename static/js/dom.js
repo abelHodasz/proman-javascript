@@ -111,27 +111,27 @@ export let dom = {
 
         if (event.target.closest('.board-title')) {
             let boardId = event.target.id.split('-')[2];
-            document.getElementById(event.target.id).innerHTML = `
-                <form id="rename-form">
-                    <input type="text" id="rename-input">
-                    <button id="save-btn-${boardId}" type="submit" class="btn btn-primary btn-save">Save</button>
-                </form>`;
-            document.getElementById('rename-form').addEventListener('submit', function () {
-                let boardId = event.target.id.split('-')[2];
-                let title = document.getElementById('rename-input').value;
-                event.preventDefault();
-                dataHandler.renameBoard(boardId, title, function () {
-                /*dataHandler.getBoard(boardId,function (board) {
-                    dom.showBoard(board, function () {
-                        
-                    })
-                })*/
-
-                dom.loadBoards();
-                });
-            })
-
+            dom.renameBoard(boardId);
         }
+    },
+    renameBoard: function (boardId) {
+        let inputHtml = `<input type="text" id="boardRenameInput" minlength="1">`;
+        let title = document.getElementById(`board-title-${boardId}`);
+        let oldTitleHtml = title.innerHTML;
+        title.innerHTML = inputHtml;
+
+        let input = document.getElementById("boardRenameInput");
+        input.focus();
+        input.addEventListener('keyup', function (event) {
+            if (event.keyCode === 13) {
+                dataHandler.renameBoard(boardId, input.value, function () {
+                });
+                title.innerText = input.value;
+            } else if (event.keyCode === 27) {
+                title.innerHTML = oldTitleHtml;
+            }
+        });
+
     },
 
     init: function () {

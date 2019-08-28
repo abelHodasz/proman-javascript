@@ -204,8 +204,8 @@ export let dom = {
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
-                    <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="add-column-${board.id}" class="column-add">Add Column</button>
+                    <button id="delete-board-${board.id}" class="board-delete">Delete</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">

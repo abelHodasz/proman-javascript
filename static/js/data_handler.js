@@ -65,9 +65,13 @@ export let dataHandler = {
         this._api_get(`/card/${cardId}`, (response) => {
             callback(response);});
     },
-
+    setCardStatus: function(cardId, statusId, callback){
+        let data = {cardId, statusId};
+         this._api_post(`/card/status`, data,  (response) => {
+             callback(response);
+        });
+    },
     createNewBoard: function (boardTitle, callback) {
-
         this._api_get(`/create-board/${boardTitle}`, (response) => {
             this._data = response;
             callback(response);
@@ -78,6 +82,19 @@ export let dataHandler = {
         this._api_post(`/create-card`, data,  (response) => {
             callback(response);
         });
-    }
+    },
+
+    deleteBoard: function (boardId, callback) {
+        this._api_get(`/board/delete/${boardId}`, (response) => {
+            callback(response);
+        });
+    },
+
+    deleteCard: function (cardId, callback) {
+        this._api_get(`/card/delete/${cardId}`, (response) => {
+            callback(response);
+        });
+    },
+
     // here comes more features
 };

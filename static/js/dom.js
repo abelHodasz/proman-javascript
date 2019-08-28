@@ -172,7 +172,7 @@ export let dom = {
     },
 
     renameCard: function (id) {
-        let cardId = id.split('-')[3];
+        let cardId = id.split('-')[2];
 
         let inputHtml = `<input type="text" id="cardRenameInput" minlength="1">`;
 
@@ -258,7 +258,7 @@ export let dom = {
 
                 let cardHtml = `<div id="card-${card.id}" class="card">
                         <div class="card-remove"><i id="delete-card-${card.id}" class="fas fa-trash-alt"></i></div>
-                        <div id="cardTitle-${boardId}-${statusId}-${card.id}" class="card-title">${card.title}</div>
+                        <div id="cardTitle-${card.id}" class="card-title">${card.title}</div>
                     </div>`;
 
                 dom._appendToElement(document.querySelector(`#board-${boardId}-col-${statusId}`), cardHtml)
@@ -282,7 +282,7 @@ export let dom = {
         dataHandler.getCard(cardId, function (card) {
             let cardHtml = `<div id="card-${cardId}" class="card">
                             <div class="card-remove"><i id="delete-card-${cardId}" class="fas fa-trash-alt"></i></div>
-                            <div id="cardTitle-${boardId}-${statusId}-${card.id}" class="card-title">${card[0].title}</div>
+                            <div id="cardTitle-${card.id}" class="card-title">${card[0].title}</div>
                         </div>`;
             dom._appendToElement(document.querySelector(`#board-${card[0].board_id}-col-${card[0].status_id}`), cardHtml);
 

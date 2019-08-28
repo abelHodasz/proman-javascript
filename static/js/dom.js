@@ -148,8 +148,7 @@ export let dom = {
             dom.renameColumn(event.target.id);
         } else if (event.target.id.split('-')[0] === 'cardTitle') {
             dom.renameCard(event.target.id)
-        }
-        else if (event.target.closest('.board-title')) {
+        } else if (event.target.closest('.board-title')) {
             let boardId = event.target.id.split('-')[2];
             dom.renameBoard(boardId);
         }

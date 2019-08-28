@@ -54,19 +54,19 @@ def create_card():
 @app.route("/create-column", methods=['POST'])
 @json_response
 def create_column():
-    return  data_handler.create_column(request.json)
+    return data_handler.create_column(request.json)
 
 
 @app.route("/rename-column", methods=['POST'])
 @json_response
 def rename_column():
-    return  data_handler.rename_column(request.json)
+    return data_handler.rename_column(request.json)
 
 
 @app.route("/rename-card", methods=['POST'])
 @json_response
 def rename_card():
-    return  data_handler.rename_card(request.json)
+    return data_handler.rename_card(request.json)
 
 
 @app.route("/status/<int:board_id>")

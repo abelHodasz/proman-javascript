@@ -156,3 +156,7 @@ section.board{
 .create-button {
     margin-left: 20px;
 }
+
+.handle{
+    cursor:pointer;
+}

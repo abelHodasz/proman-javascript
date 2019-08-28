@@ -141,6 +141,14 @@ export let dom = {
         let cards = document.querySelectorAll('.board-column-content');
         let containersArray = Array.from(cards);
         let drag = dragula(containersArray);
+        let cols = document.querySelectorAll('.board-columns');
+        containersArray = Array.from(cols);
+        let dragCols = dragula(containersArray,{
+            moves: function (el, container, handle) {
+                return handle.classList.contains('handle');
+            },
+            direction: 'horizontal'
+        });
 
         drag.on('drop', (el, target, source, sibling) => {
 
@@ -202,7 +210,7 @@ export let dom = {
         dataHandler.getColumn(statusId, function (column) {
             let columnHtml = `
                     <div class="board-column">
-                        <div class="board-column-title">${column[0].title}</div>
+                        <div class="handle board-column-title">${column[0].title}</div>
                         <div id="board-${boardId}-col-${column[0].id}" class="board-column-content"></div>
                     </div>`;
             dom._appendToElement(document.querySelector(`#columns-${boardId}`), columnHtml);
@@ -227,7 +235,8 @@ export let dom = {
             for(let status of statuses) {
                 let column = `
                     <div class="board-column">
-                        <div class="board-column-title">${status.title}</div>
+                        <div class="handle board-column-title">${status.title}</div>
+
                         <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
                     </div>`;
 

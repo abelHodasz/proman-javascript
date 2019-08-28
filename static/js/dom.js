@@ -97,7 +97,8 @@ export let dom = {
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");
             let element = document.getElementById('columns-' + id);
             dom.toggleBoards(element);
-        } else if (event.target.classList.contains('board-add')) {
+        }
+        else if (event.target.classList.contains('board-add')) {
             let id = event.target.id.split('-')[2];
             dom.showModal("Add Card");
             document.getElementById('form').addEventListener("submit", function (event) {
@@ -106,17 +107,20 @@ export let dom = {
                 document.getElementById('modal-content').innerHTML = '';
                 $('#modal').modal('hide');
             });
-        } else if (event.target.closest('.board-delete')) {
+        }
+        else if (event.target.closest('.board-delete')) {
             let boardId = event.target.id.split('-')[2];
             dataHandler.deleteBoard(boardId, function () {
                 document.getElementById(`board-${boardId}`).remove()
             })
-        } else if (event.target.closest('.card-remove')) {
+        }
+        else if (event.target.closest('.card-remove')) {
             let cardId = event.target.id.split('-')[2];
             dataHandler.deleteCard(cardId, function () {
                 document.getElementById(`card-${cardId}`).remove()
             })
-        } else if (event.target.closest('.column-add')) {
+        }
+        else if (event.target.closest('.column-add')){
             let boardId = event.target.id.split('-')[2];
             dom.showModal("Add Column");
             document.getElementById('form').addEventListener("submit", function (event) {
@@ -170,6 +174,14 @@ export let dom = {
         let cards = document.querySelectorAll('.board-column-content');
         let containersArray = Array.from(cards);
         let drag = dragula(containersArray);
+        let cols = document.querySelectorAll('.board-columns');
+        containersArray = Array.from(cols);
+        let dragCols = dragula(containersArray,{
+            moves: function (el, container, handle) {
+                return handle.classList.contains('handle');
+            },
+            direction: 'horizontal'
+        });
 
         drag.on('drop', (el, target, source, sibling) => {
 
@@ -177,8 +189,8 @@ export let dom = {
             let cardId = el.id.split('-')[1];
             let statusId = source.id.split('-')[3];
             let newStatusId = target.id.split('-')[3];
-            if (statusId !== newStatusId) {
-                dataHandler.setCardStatus(cardId, newStatusId, () => {
+            if (statusId !== newStatusId){
+                dataHandler.setCardStatus(cardId, newStatusId, ()=>{
                     console.log("changed card status");
                 });
             }
@@ -192,8 +204,8 @@ export let dom = {
                 <div class="board-header">
                     <span class="board-title">${board.title}</span>
                     <button id="add-card-${board.id}" class="board-add">Add Card</button>
-                    <button id="add-column-${board.id}" class="column-add">Add Column</button>
                     <button id="delete-board-${board.id}" class="board-delete">Delete</button>
+                    <button id="add-column-${board.id}" class="column-add">Add Column</button>
                     <button id="toggle-board-${board.id}" class="board-toggle"><i id="toggle-icon-${board.id}" class="fas fa-chevron-down"></i></button>
                 </div>
                 <div id="columns-${board.id}" class="board-columns hide">
@@ -228,7 +240,7 @@ export let dom = {
         dataHandler.getColumn(statusId, function (column) {
             let columnHtml = `
                     <div class="board-column">
-                        <div id="colTitle-${boardId}-col-${statusId}" class="board-column-title">${column[0].title}</div>
+                        <div id="colTitle-${boardId}-col-${statusId}" class="handle board-column-title">${column[0].title}</div>
                         <div id="board-${boardId}-col-${column[0].id}" class="board-column-content"></div>
                     </div>`;
             dom._appendToElement(document.querySelector(`#columns-${boardId}`), columnHtml);
@@ -252,7 +264,7 @@ export let dom = {
             for (let status of statuses) {
                 let column = `
                     <div class="board-column">
-                        <div id="colTitle-${boardId}-col-${status.id}" class="board-column-title">${status.title}</div>
+                        <div id="colTitle-${boardId}-col-${status.id}" class="handle board-column-title">${status.title}</div>
                         <div id="board-${boardId}-col-${status.id}" class="board-column-content"></div>
                     </div>`;
 

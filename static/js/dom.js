@@ -102,6 +102,15 @@ export let dom = {
             }
         }
 
+        if (event.target.id !== 'boardRenameInput') {
+            try {
+                let evt = new KeyboardEvent('keyup', {'keyCode': 27, 'which': 27});
+                document.getElementById('boardRenameInput').dispatchEvent(evt);
+            } catch (error) {
+
+            }
+        }
+
         if (event.target.closest('.board-toggle')) {
             let id = event.target.id.split('-')[2];
             document.getElementById(`toggle-icon-${id}`).classList.toggle("rotate180");

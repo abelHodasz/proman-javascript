@@ -2,6 +2,7 @@ import psycopg2
 import psycopg2.extras
 import os
 
+
 def establish_connection(connection_data=None):
     """
     Create a database connection based on the :connection_data: parameter
@@ -42,6 +43,7 @@ def get_connection_data(db_name=None):
         'host': os.environ.get('PSQL_HOST'),
         'password': os.environ.get('PSQL_PASSWORD')
     }
+
 
 def execute_select(statement, variables=None):
     """

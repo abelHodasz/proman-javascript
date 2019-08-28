@@ -57,3 +57,9 @@ create unique index cards_id_uindex
 alter table cards
 	add constraint cards_pk
 		primary key (id);
+
+create sequence cards_order_seq;
+
+alter table cards alter column "order" set default nextval('public.cards_order_seq');
+
+alter sequence cards_order_seq owned by cards."order";

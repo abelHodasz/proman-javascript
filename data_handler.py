@@ -16,24 +16,39 @@ def create_card(data):
                                             'VALUES (%(boardId)s, %(cardTitle)s, %(statusId)s)'
                                             'RETURNING id ', variables=data)[0]
 
+
 def create_column(data):
     statusId = connection.execute_dml_statement('INSERT INTO statuses (title) '
-                                            'VALUES (%(columnTitle)s)'
-                                            'RETURNING id ', variables=data)[0]
+                                                'VALUES (%(columnTitle)s)'
+                                                'RETURNING id ', variables=data)[0]
 
     connection.execute_dml_statement("""INSERT INTO board_statuses VALUES (%(board_id)s, %(statusId)s)
                                         ;""", variables={'board_id': data['boardId'], 'statusId': statusId})
 
     return str(statusId)
 
+
+def rename_column(data):
+    return connection.execute_dml_statement("""UPDATE statuses SET title = %(newTitle)s WHERE id = %(statusId)s;""",
+                                            variables=data)
+
+
+def rename_card(data):
+    return connection.execute_dml_statement("""UPDATE cards SET title = %(newTitle)s WHERE id = %(cardId)s;""",
+                                            variables=data)
+
+
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 
+
 def get_statuses_by_board_id(board_id):
     return connection.execute_select("""SELECT * FROM statuses
-                                     WHERE id IN (SELECT status_id FROM board_statuses
-                                                WHERE board_id = %(board_id)s) """,
-                                    variables={'board_id': board_id})
+                                        WHERE id IN (SELECT status_id FROM board_statuses
+                                                    WHERE board_id = %(board_id)s)
+                                        ORDER BY id""",
+                                     variables={'board_id': board_id})
+
 
 def get_cards(board_id, status_id):
     return connection.execute_select("""SELECT * FROM cards
@@ -50,7 +65,7 @@ def create_board(title):
     board = connection.execute_dml_statement("""INSERT INTO boards (title) VALUES (%(title)s)
                                                 RETURNING *;""", variables={'title': title})
 
-    board = {'id': board[0], 'title': board[1] }
+    board = {'id': board[0], 'title': board[1]}
 
     for i in range(4):
         connection.execute_dml_statement("""INSERT INTO board_statuses VALUES (%(board_id)s, %(i)s)
@@ -63,6 +78,7 @@ def get_card(card_id):
                                     SELECT * from cards
                                     WHERE id = %(card_id)s""", variables={'card_id': card_id})
 
+
 def get_column(status_id):
     return connection.execute_select("""
                                     SELECT * from statuses
@@ -74,6 +90,7 @@ def delete_board(board_id):
                                             DELETE FROM boards
                                             WHERE id = %(board_id)s
                                             """, variables={'board_id': board_id})
+
 
 def delete_card(card_id):
     return connection.execute_dml_statement("""
@@ -105,3 +122,19 @@ def get_cards_for_board(board_id):
             card['status_id'] = get_card_status(card['status_id'])  # Set textual status for the card
             matching_cards.append(card)
     return matching_cards
+
+
+def set_board_title(data):
+    return connection.execute_dml_statement('''
+                                            UPDATE boards
+                                            SET title = %(boardTitle)s
+                                            WHERE id = %(boardId)s;
+                                            ''', variables=data)
+
+
+def get_board_by_id(board_id):
+    return connection.execute_select('''
+                                    SELECT *
+                                    FROM boards
+                                    WHERE id = %(board_id)s;
+                                    ''', {'board_id': board_id})

@@ -13,8 +13,8 @@ export let dataHandler = {
             method: 'GET',
             credentials: 'same-origin'
         })
-        .then(response => response.json())  // parse the response as JSON
-        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+            .then(response => response.json())  // parse the response as JSON
+            .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
     _api_post: function (url, data, callback) {
         fetch(url, {
@@ -23,8 +23,8 @@ export let dataHandler = {
             body: JSON.stringify(data),
             headers: {'Content-Type': 'application/json'}
         })
-        .then(response => response.json())  // parse the response as JSON
-        .then(json_response => callback(json_response));  // Call the `callback` with the returned object
+            .then(response => response.json())  // parse the response as JSON
+            .then(json_response => callback(json_response));  // Call the `callback` with the returned object
     },
     init: function () {
     },
@@ -40,14 +40,15 @@ export let dataHandler = {
     },
     getBoard: function (boardId, callback) {
         // the board is retrieved and then the callback function is called with the board
+
     },
     getStatuses: function (callback) {
-       this._api_get(`/get-statuses`, (response) => {
+        this._api_get(`/get-statuses`, (response) => {
             callback(response);
         });
     },
 
-    getStatusesByBoardId: function (boardID, callback){
+    getStatusesByBoardId: function (boardID, callback) {
         this._api_get(`/status/${boardID}`, (response) => {
             callback(response);
         });
@@ -63,17 +64,19 @@ export let dataHandler = {
     },
     getCard: function (cardId, callback) {
         this._api_get(`/card/${cardId}`, (response) => {
-            callback(response);});
+            callback(response);
+        });
     },
     getColumn: function (statusId, callback) {
         this._api_get(`/column/${statusId}`, (response) => {
-            callback(response);});
+            callback(response);
+        });
     },
 
-    setCardStatus: function(cardId, statusId, callback){
+    setCardStatus: function (cardId, statusId, callback) {
         let data = {cardId, statusId};
-         this._api_post(`/card/status`, data,  (response) => {
-             callback(response);
+        this._api_post(`/card/status`, data, (response) => {
+            callback(response);
         });
     },
     createNewBoard: function (boardTitle, callback) {
@@ -85,13 +88,28 @@ export let dataHandler = {
     },
     createNewCard: function (cardTitle, boardId, statusId, callback) {
         let data = {cardTitle, boardId, statusId};
-        this._api_post(`/create-card`, data,  (response) => {
+        this._api_post(`/create-card`, data, (response) => {
             callback(response);
         });
     },
+
+    renameCard: function (cardId, newTitle, callback) {
+        let data = {cardId, newTitle};
+        this._api_post(`/rename-card`, data, (response) => {
+            callback(response);
+        });
+    },
+
     createNewColumn: function (columnTitle, boardId, callback) {
         let data = {columnTitle, boardId};
-        this._api_post(`/create-column`, data,  (response) => {
+        this._api_post(`/create-column`, data, (response) => {
+            callback(response);
+        });
+    },
+
+    renameColumn: function (statusId, newTitle, callback) {
+        let data = {statusId, newTitle};
+        this._api_post(`/rename-column`, data, (response) => {
             callback(response);
         });
     },
@@ -109,6 +127,13 @@ export let dataHandler = {
     },
     deleteColumn: function(boardId, statusId, callback){
          this._api_get(`/column/delete/${boardId}/${statusId}`, (response) => {
+            callback(response);
+        });
+    },
+
+    renameBoard: function (boardId, boardTitle, callback) {
+        let data = {boardId, boardTitle};
+        this._api_post(`/boards/${boardId}/rename`, data, (response) => {
             callback(response);
         });
     }

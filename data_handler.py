@@ -29,6 +29,9 @@ def create_column(data):
 def rename_column(data):
     return connection.execute_dml_statement("""UPDATE statuses SET title = %(newTitle)s WHERE id = %(statusId)s;""", variables=data)
 
+def rename_card(data):
+    return connection.execute_dml_statement("""UPDATE cards SET title = %(newTitle)s WHERE id = %(cardId)s;""", variables=data)
+
 def get_statuses():
     return connection.execute_select('SELECT title FROM statuses;')
 
